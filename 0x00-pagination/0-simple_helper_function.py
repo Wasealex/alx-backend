@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 """
-This is a simple helper function that returns 
+This is a simple helper function that returns
 a tuple of size two containing:
 a start index and an end index
 """
-def index_range(page: int, page_size: int) -> tuple[int, int]:
+
+
+from typing import Tuple
+
+
+def index_range(page: int, page_size: int) -> Tuple[int, int]:
     """
-    Return a tuple of size two containing a start index 
+    Return a tuple of size two containing a start index
     and an end index
     """
     start_index = (page - 1) * page_size

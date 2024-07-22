@@ -28,7 +28,7 @@ class Server:
                 reader = csv.reader(f)
                 self.__dataset = [row for row in reader]
         return self.__dataset
-    
+
     def indexed_dataset(self) -> Dict[int, List]:
         """
         Returns the indexed dataset
@@ -40,12 +40,15 @@ class Server:
                 i: dataset[i] for i in range(len(dataset))
                 }
         return self.__indexed_dataset
-    
+
     def get_hyper_index(self, index: int = 0, page_size: int = 10) -> Dict:
         """
         Return a dictionary containing the following key-value pairs:
-        - index: the current start index of the return page. That is the index of the first item in the current page
-        - next_index: the next index to query with. That should be the index of the first item after the last item on the current page
+        - index: the current start index of the return page.
+        That is the index of the first item in the current page
+        - next_index: the next index to query with.
+        That should be the index of the first item after
+        the last item on the current page
         - page_size: the current page size
         """
         assert isinstance(index, int) and index >= 0

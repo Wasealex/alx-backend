@@ -4,6 +4,8 @@
 from flask import Flask, render_template, request, g
 from flask_babel import Babel
 from typing import Optional
+from pytz import timezone
+from datetime import datetime
 
 
 class Config:
@@ -66,11 +68,28 @@ def get_locale():
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
+@babel.timezoneselector
+def get_timezone():
+    """get timezone
+    """
+    timezone = request.args.get('timezone')
+    if timezone:
+        return timezone
+
+    if g.user:
+        timezone = g.user.get('timezone')
+        if timezone:
+            return timezone
+    return app.config['BABEL_DEFAULT_TIMEZONE']
+
+
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index():
     """GET method
     """
-    return render_template('6-index.html')
+    time_format = "%b %d, %Y, %I:%M:%S %p"
+    current_time = datetime.now().strftime(time_format)
+    return render_template('index.html', user=g.user, time=current_time)
 
 
 if __name__ == '__main__':

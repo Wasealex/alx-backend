@@ -66,6 +66,21 @@ def get_locale():
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
+@babel.timezoneselector
+def get_timezone():
+    """get timezone
+    """
+    timezone = request.args.get('timezone')
+    if timezone:
+        return timezone
+
+    if g.user:
+        timezone = g.user.get('timezone')
+        if timezone:
+            return timezone
+    return app.config['BABEL_DEFAULT_TIMEZONE']
+
+
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index():
     """GET method

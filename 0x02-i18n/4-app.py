@@ -22,16 +22,15 @@ babel = Babel(app)
 def get_locale():
     """get locale
     """
+    locale = request.args.get('locale')
+    if locale in app.config['LANGUAGES']:
+        return locale
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index():
     """GET method
     """
-    locale = request.args.get('locale')
-    if locale in app.config['LANGUAGES']:
-        print(locale)
-        return locale
     return render_template('3-index.html')
 
 

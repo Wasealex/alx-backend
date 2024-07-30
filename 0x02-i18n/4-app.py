@@ -18,15 +18,17 @@ app = Flask(__name__)
 app.config.from_object(Config)
 babel = Babel(app)
 
+
 @babel.localeselector
 def get_locale():
     """get locale
     """
     locale = request.args.get('locale')
     if locale in app.config['LANGUAGES']:
-        print (locale)
+        print(locale)
         return locale
     return request.accept_languages.best_match(app.config['LANGUAGES'])
+
 
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index():

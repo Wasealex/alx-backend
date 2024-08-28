@@ -1,30 +1,29 @@
-const kue = require('kue');
+import { Queue, Job } from 'kue';
 
-function createPushNotificationsJobs(jobs, queue) {
-  if (!Array.isArray(jobs)) {
+export const createPushNotificationsJobs = (jobList, notificationQueue) => {
+  if (!(jobList instanceof Array)) {
     throw new Error('Jobs is not an array');
   }
 
-  jobs.forEach((job) => {
-    const newJob = queue.create('push_notification_code_3', job)
-      .save((err) => {
-        if (!err) {
-          console.log(`Notification job created: ${newJob.id}`);
+  for (const jobDetails of jobList) {
+    const notificationJob = notificationQueue.create('push_notification_code_3', jobDetails);
 
-          newJob.on('complete', () => {
-            console.log(`Notification job ${newJob.id} completed`);
-          });
-
-          newJob.on('failed', (err) => {
-            console.log(`Notification job ${newJob.id} failed: ${err}`);
-          });
-
-          newJob.on('progress', (progress) => {
-            console.log(`Notification job ${newJob.id} ${progress}% complete`);
-          });
-        }
+    notificationJob
+      .on('enqueue', () => {
+        console.log('Notification job created:', notificationJob.id);
+      })
+      .on('complete', () => {
+        console.log('Notification job', notificationJob.id, 'completed');
+      })
+      .on('failed', (err) => {
+        console.log('Notification job', notificationJob.id, 'failed:', err.message || err.toString());
+      })
+      .on('progress', (progress, _data) => {
+        console.log('Notification job', notificationJob.id, `${progress}% complete`);
       });
-  });
-}
 
-module.exports = createPushNotificationsJobs;
+    notificationJob.save();
+  }
+};
+
+export default createPushNotificationsJobs;
